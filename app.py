@@ -31,7 +31,6 @@ def root():
 def root_hostname(hostname):
     return render_template('index.html', installed=True, hostname=hostname)
 
-
 @app.route('/callback')
 def callback():
     args = request.args
@@ -47,6 +46,7 @@ def callback():
 
 @app.route('/merchant/<shop_id>')
 def merchant_account_status(shop_id):
+    print("Serving always ready merchant account status")
     return jsonify({
         "ready" : True,
         "details" : {
@@ -56,8 +56,16 @@ def merchant_account_status(shop_id):
 
 @app.route('/payments', methods=['POST'])
 def create_payment():
+    print("Creating payment")
     return jsonify({
         "paymentNote" : "Please transfer the money using the reference %s to the account %s" % (generate_id(), generate_id()),
+    })
+
+@app.route('/payments/<payment_id>/capture', methods=['POST'])
+def capture_payment(payment_id):
+    print("Capturing payment %s" % payment_id)
+    return jsonify({
+        "paymentStatus" : "CAPTURED",
     })
 
 def generate_id():
