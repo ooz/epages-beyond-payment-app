@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Example Payment App</title>
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="container pagecontainer">
+      <h1>Beautiful Payments</h1>
+      {% if error_message %}
+      <p>{{ error_message }}</p>
+      {% endif %}
+      {% if installed %}
+      <p>
+        Successfully installed!
+      </p>
+      {% else %}
+      <p>
+        Please install the app first!
+      </p>
+      {% endif %}
+    </div>
+  </body>
+</html>

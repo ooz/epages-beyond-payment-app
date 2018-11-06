@@ -1,0 +1,33 @@
+{
+    "name": "epages-beyond-payment-app",
+    "description": "ePages Beyond example payment app for testing purposes.",
+    "website": "https://epages-beyond-payment-app.herokuapp.com/",
+    "repository": "https://github.com/ooz/epages-beyond-payment-app",
+    "image": "heroku/python",
+    "buildpacks": [
+        { "url": "heroku/python" }
+    ],
+    "addons": [
+        {
+            "plan": "heroku-postgresql:hobby-dev",
+            "options": {
+                "version": "10"
+            }
+        }
+    ],
+    "env": {
+        "API_URL": {
+            "value": "",
+            "description": "API URL to your ePages Beyond shop. If set, this becomes a custom app (developer app).",
+            "required": false
+        },
+        "CLIENT_ID": {
+            "value": "",
+            "description": "Client ID of your app"
+        },
+        "CLIENT_SECRET": {
+            "value": "",
+            "description": "Client secret of your app"
+        }
+    }
+}
