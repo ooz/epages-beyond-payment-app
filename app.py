@@ -44,7 +44,7 @@ def callback():
 
     return render_template('callback_result.html', return_url=return_url)
 
-@app.route('/merchant/<shop_id>')
+@app.route('/merchants/<shop_id>')
 def merchant_account_status(shop_id):
     print("Serving always ready merchant account status")
     return jsonify({
