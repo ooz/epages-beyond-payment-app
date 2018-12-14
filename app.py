@@ -50,7 +50,7 @@ def merchant_account_status(shop_id):
     return jsonify({
         "ready" : True,
         "details" : {
-            "primaryEmail" : "a@b.c"
+            "primaryEmail" : "example@b.c"
         }
     })
 
