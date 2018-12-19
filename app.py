@@ -21,6 +21,8 @@ APP_INSTALLATIONS = None
 DEFAULT_HOSTNAME = ''
 LOGGER = logging.getLogger("app")
 
+AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS = ["beautiful-test-payment-embedded"]
+
 @app.route('/')
 def root():
     if DEFAULT_HOSTNAME != '':
@@ -44,9 +46,18 @@ def callback():
     APP_INSTALLATIONS.retrieve_token_from_auth_code(api_url, code, access_token_url, signature)
 
     installation = APP_INSTALLATIONS.get_installation(urlparse(api_url).hostname)
-    status_code = create_payment_method(installation, "beautiful-test-payment-embedded")
 
-    return render_template('callback_result.html', return_url=return_url)
+    installation_results = []
+    for pmd_name in AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS:
+        status = create_payment_method(installation, pmd_name)
+        installation_results.append({
+            "status_code": status,
+            "payment_method_definition_name": pmd_name
+        })
+
+    return render_template('callback_result.html',
+                            return_url=return_url,
+                            installation_results=installation_results)
 
 @app.route('/merchants/<shop_id>')
 def merchant_account_status(shop_id):

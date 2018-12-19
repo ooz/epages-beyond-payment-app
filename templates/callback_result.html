@@ -10,8 +10,21 @@
 <body>
     <div class="container pagecontainer">
         <h1>Callback</h1>
-        <p>Thanks for installing demo payment app! Hit the "return" link below to return to your Commerce Cockpit</p>
-        <a href="{{ return_url }}">return</a>
+
+        {% for installed_method in installation_results %}
+            {% if installed_method['status_code'] == 200 %}
+            <p>
+            Payment method {{ installed_method['payment_method_definition_name'] }} was automatically created for your shop! You can now activate it.
+            </p>
+            {% else %}
+            <p>
+            Something went wrong when creating payment method {{ installed_method['payment_method_definition_name'] }} :(
+            </p>
+            {% endif %}
+        {% endfor %}
+
+      <p>Thanks for installing demo payment app! Hit the "return" link below to return to your Commerce Cockpit</p>
+      <a href="{{ return_url }}">return</a>
     </div>
 </body>
 
