@@ -1,0 +1,23 @@
+{
+  "createPaymentUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/payments",
+  "_links": {
+    "self": {
+      "href": "https://system.beyondshop.cloud/api/payment-method-definitions/beautiful-test-payment-sandbox"
+    }
+  },
+  "workflow": "PAYMENT_ON_BUY",
+  "_id": "beautiful-test-payment-sandbox",
+  "sandbox": true,
+  "statusUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/merchants/{shopId}",
+  "defaultDescription": {},
+  "refundPaymentUriTemplate": null,
+  "officialName": {},
+  "capturePaymentUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/payments/{paymentId}/capture",
+  "disconnectUriTemplate": null,
+  "logos": [],
+  "referralUriTemplate": null,
+  "refund": "NO_REFUND",
+  "defaultName": {},
+  "officialDescription": {},
+  "name": "beautiful-test-payment-sandbox"
+}

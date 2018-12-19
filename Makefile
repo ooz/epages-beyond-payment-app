@@ -15,6 +15,10 @@ clean_pypi:
 
 clean_all: clean clean_vscode clean_pypi
 
+# Testing
+test:
+	pipenv run pytest -v -c env.list
+
 # Docker
 docker_build:
 	docker build -t oozz/epages-beyond-payment-app:latest .
@@ -35,6 +39,7 @@ docker_init_env:
 	cp env.list.template env.list
 
 .PHONY: clean clean_vscode clean_pypi clean_all \
+test \
 docker_build docker_run \
 docker_buildrun \
 docker_clean docker_push docker_init_env
