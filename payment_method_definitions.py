@@ -18,15 +18,6 @@ def system_token(client_id, client_secret):
         .json() \
         .get("access_token", "")
 
-def create_payment_method(installation):
-    pass
-    """
-    requests.post(url=token_url, data=params, auth=(self.client_id, self.client_secret)).json()
-
-    order_json = requests.get(installation.api_url + "payment-method-definitions/testPMD/payment-method" % order_id, \
-        headers={"AUTHORIZATION": "Bearer %s" % installation.access_token})
-    """
-
 def get_payment_method_definitions(system_token):
     payment_method_definitions = \
         requests.get('%s/payment-method-definitions' % SYSTEM_API_URL, \
@@ -49,3 +40,23 @@ def create_payment_method_definition(system_token, file_path):
             }, \
             json=payment_method_definition_create_payload).json()
     return created_payment_method_definition
+
+
+def get_payment_method_definition(installation, payment_method_definition_name):
+    payment_method_definition = \
+        requests.get('%s/payment-method-definitions/%s' % (installation.api_url, payment_method_definition_name), \
+                 headers={
+                     "Accept": "application/hal+json",
+                     "Authorization": "Bearer %s" % installation.access_token
+                 }).json()
+
+    return payment_method_definition
+
+def create_payment_method(installation, payment_method_definition_name):
+     return requests.post('%s/payment-method-definitions/%s/payment-method' % (installation.api_url, payment_method_definition_name), \
+            headers= {
+                "Accept": "application/hal+json",
+                "Authorization": "Bearer %s" % installation.access_token
+            }).status_code
+
+

@@ -13,6 +13,7 @@ from urllib.parse import urlparse, unquote
 
 from flask import Flask, render_template, request, Response, abort, escape, jsonify
 from app_installations import AppInstallations, PostgresAppInstallations
+from payment_method_definitions import create_payment_method
 
 app = Flask(__name__)
 
@@ -41,6 +42,9 @@ def callback():
     signature = unquote(args.get("signature"))
 
     APP_INSTALLATIONS.retrieve_token_from_auth_code(api_url, code, access_token_url, signature)
+
+    installation = APP_INSTALLATIONS.get_installation(urlparse(api_url).hostname)
+    status_code = create_payment_method(installation, "beautiful-test-payment-embedded")
 
     return render_template('callback_result.html', return_url=return_url)
 
