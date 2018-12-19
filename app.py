@@ -45,7 +45,8 @@ def callback():
 
     APP_INSTALLATIONS.retrieve_token_from_auth_code(api_url, code, access_token_url, signature)
 
-    installation = APP_INSTALLATIONS.get_installation(urlparse(api_url).hostname)
+    hostname = urlparse(api_url).hostname
+    installation = APP_INSTALLATIONS.get_installation(hostname)
 
     installation_results = []
     for pmd_name in AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS:
@@ -54,6 +55,7 @@ def callback():
             "status_code": status,
             "payment_method_definition_name": pmd_name
         })
+        print("Created payment method for %s in shop %s with status %i" % (pmd_name, hostname, status))
 
     return render_template('callback_result.html',
                             return_url=return_url,
