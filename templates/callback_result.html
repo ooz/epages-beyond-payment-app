@@ -11,14 +11,14 @@
     <div class="container pagecontainer">
         <h1>Callback</h1>
 
-        {% for installed_method in installation_results %}
-            {% if installed_method['status_code'] == 200 %}
+        {% for created_method in created_payment_methods %}
+            {% if created_method['status_code'] == 200 %}
             <p>
-            Payment method {{ installed_method['payment_method_definition_name'] }} was automatically created for your shop! You can now activate it.
+            Payment method {{ created_method['payment_method_definition_name'] }} was automatically created for your shop! You can now activate it.
             </p>
             {% else %}
             <p>
-            Something went wrong when creating payment method {{ installed_method['payment_method_definition_name'] }} :(
+            Something went wrong when creating payment method {{ created_method['payment_method_definition_name'] }} :(
             </p>
             {% endif %}
         {% endfor %}

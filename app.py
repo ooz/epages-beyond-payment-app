@@ -46,20 +46,25 @@ def callback():
     APP_INSTALLATIONS.retrieve_token_from_auth_code(api_url, code, access_token_url, signature)
 
     hostname = urlparse(api_url).hostname
+    created_payment_methods = _auto_create_payment_methods(hostname)
+
+    return render_template('callback_result.html',
+                            return_url=return_url,
+                            created_payment_methods=created_payment_methods)
+
+def _auto_create_payment_methods(hostname):
     installation = APP_INSTALLATIONS.get_installation(hostname)
 
-    installation_results = []
+    created_payment_methods = []
     for pmd_name in AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS:
         status = create_payment_method(installation, pmd_name)
-        installation_results.append({
+        created_payment_methods.append({
             "status_code": status,
             "payment_method_definition_name": pmd_name
         })
         print("Created payment method for %s in shop %s with status %i" % (pmd_name, hostname, status))
 
-    return render_template('callback_result.html',
-                            return_url=return_url,
-                            installation_results=installation_results)
+    return created_payment_methods
 
 @app.route('/merchants/<shop_id>')
 def merchant_account_status(shop_id):
