@@ -78,9 +78,16 @@ def merchant_account_status(shop_id):
 
 @app.route('/payments', methods=['POST'])
 def create_payment():
-    print("Creating payment")
+    print("Creating payment with paymentNote")
     return jsonify({
-        "paymentNote" : "Please transfer the money using the reference %s to the account %s" % (generate_id(), generate_id()),
+        "paymentNote": "Please transfer the money using the reference %s to the account %s" % (generate_id(), generate_id()),
+    })
+
+@app.route('/embedded-payments', methods=['POST'])
+def create_embedded_payment():
+    print('Creating embedded payment')
+    return jsonify({
+        'embeddedApprovalUri': 'https://www.google.com'
     })
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
