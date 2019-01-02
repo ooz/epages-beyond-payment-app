@@ -88,11 +88,15 @@ def create_payment():
 
 @app.route('/embedded-payments', methods=['POST'])
 def create_embedded_payment():
+    app_hostname = urlparse(request.url_root).hostname
+    epages_signatures = request.headers.get('X-EPAGES-SIGNATURE')
+    print('Create embedded payment with signature headers: %s', str(epages_signatures))
+
     payload = request.get_json(force=True)
     shop = payload.get('shop', {}).get('name', '')
     payment_id = payload.get('paymentId', '')
     signature = sign(payment_id, CLIENT_SECRET)
-    app_hostname = urlparse(request.url_root).hostname
+
     params = {
         'paymentId': payment_id,
         'signature': signature,
