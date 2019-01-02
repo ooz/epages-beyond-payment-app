@@ -197,7 +197,4 @@ def init():
 
 init()
 if __name__ == '__main__':
-    if os.environ.get('RUNNING_IN_DOCKER', '') != '':
-        app.run(host='0.0.0.0', port=8080, threaded=True)
-    else:
-        app.run()
+    app.run()
