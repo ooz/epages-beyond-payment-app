@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from signer import sign
+from signers import sign
 
 def test_sign():
     signature = sign('Hello, unaltered message!', 'ha2e25nfmvo1dgeqsncd3nqsoj')

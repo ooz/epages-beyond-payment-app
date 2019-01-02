@@ -6,7 +6,7 @@ import requests
 import os
 import psycopg2
 
-from signer import sign
+from signers import sign
 
 class AppInstallations(object):
 
