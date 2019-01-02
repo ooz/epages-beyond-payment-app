@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import base64
-import hashlib
-import hmac
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 import requests
 import os
 import psycopg2
+
+from signer import sign
 
 class AppInstallations(object):
 
@@ -75,10 +74,8 @@ class AppInstallations(object):
 
     def _calculate_signature(self, code, access_token_url, client_secret):
         message = '%s:%s' % (code, access_token_url)
-        digest = hmac.new(client_secret.encode('utf-8'),
-                          msg=message.encode('utf-8'),
-                          digestmod=hashlib.sha1).digest()
-        return base64.b64encode(digest).decode('utf-8')
+        return sign(message, client_secret)
+
 
     def _refresh_token(self, installation):
         """Get a new token using the refresh token
