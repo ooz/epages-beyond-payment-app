@@ -9,15 +9,18 @@ Description:
 import os
 import logging
 import random
-from urllib.parse import urlparse, unquote
+from urllib.parse import urlencode, urlparse, unquote
 
 from flask import Flask, render_template, request, Response, abort, escape, jsonify
+
 from app_installations import AppInstallations, PostgresAppInstallations
 from payment_method_definitions import create_payment_method
+from signer import sign
 
 app = Flask(__name__)
 
 APP_INSTALLATIONS = None
+CLIENT_SECRET = ''
 DEFAULT_HOSTNAME = ''
 LOGGER = logging.getLogger("app")
 
@@ -85,10 +88,38 @@ def create_payment():
 
 @app.route('/embedded-payments', methods=['POST'])
 def create_embedded_payment():
-    print('Creating embedded payment')
+    payload = request.get_json(force=True)
+    shop = payload.get('shop', {}).get('name', '')
+    payment_id = payload.get('paymentId', '')
+    signature = sign(payment_id, CLIENT_SECRET)
+    app_hostname = urlparse(request.url_root).hostname
+    params = {
+        'paymentId': payment_id,
+        'signature': signature,
+        'shop': shop
+    }
+    embeddedApprovalUri = 'https://%s/embedded-payment-approval?%s' % (app_hostname, urlencode(params))
+    print('Created embedded payment for shop %s' % shop)
     return jsonify({
-        'embeddedApprovalUri': 'https://www.google.com'
+        'embeddedApprovalUri': embeddedApprovalUri
     })
+
+@app.route('/embedded-payment-approval')
+def embedded_payment_approval():
+    args = request.args
+    payment_id = unquote(args.get('paymentId', ''))
+    signature = unquote(args.get('signature', ''))
+    shop = unquote(args.get('shop', ''))
+    return render_template('embedded_payment_approval.html',
+                           payment_id=payment_id,
+                           signature=signature,
+                           shop=shop)
+
+@app.route('/payments/<payment_id>/approve', methods=['POST'])
+def approve_payment(payment_id):
+    ''' Currently only needed for embedded payments
+    '''
+    pass
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
 def capture_payment(payment_id):
@@ -149,6 +180,7 @@ def all_exception_handler(error):
 def init():
     global APP_INSTALLATIONS
     global DEFAULT_HOSTNAME
+    global CLIENT_SECRET
 
     CLIENT_ID = os.environ.get('CLIENT_ID', '')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')

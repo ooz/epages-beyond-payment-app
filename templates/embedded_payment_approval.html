@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>iframe payment to {{ shop }}</title>
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+      function redirectToSuccess() {
+          console.log("Redirecting to successUri...");
+          window.parent.location.href = "";
+      }
+      function redirectToCancel() {
+          console.log("Redirecting to cancelUri...");
+          window.parent.location.href = "";
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container pagecontainer">
+      <h1>Payment to {{ shop }}</h1>
+
+      <input type="text" name="name" />
+
+      <input type="button" onclick="redirectToSuccess()"  value="success" class="btn btn-xs btn-success" />
+      <input type="button" onclick="redirectToCancel()"  value="cancel" class="btn btn-xs btn-danger" />
+
+    </div>
+  </body>
+</html>
