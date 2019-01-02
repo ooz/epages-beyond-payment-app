@@ -2,21 +2,20 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
     <title>iframe payment to {{ shop }}</title>
     <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
     <script type="text/javascript">
       function redirectToSuccess() {
           console.log("Redirecting to successUri...");
-          window.parent.location.href = "";
+          //window.parent.location.href = "";
       }
       function redirectToCancel() {
           console.log("Redirecting to cancelUri...");
-          window.parent.location.href = "";
+          //window.parent.location.href = "";
       }
     </script>
-  </head>
-  <body>
     <div class="container pagecontainer">
       <h1>Payment to {{ shop }}</h1>
 
