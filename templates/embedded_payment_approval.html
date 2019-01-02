@@ -6,21 +6,17 @@
     <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <script type="text/javascript">
-      function redirectToSuccess() {
-          console.log("Redirecting to successUri...");
-          //window.parent.location.href = "";
-      }
-      function redirectToCancel() {
-          console.log("Redirecting to cancelUri...");
-          //window.parent.location.href = "";
-      }
-    </script>
     <div class="container pagecontainer">
       <h1>Payment to {{ shop }}</h1>
 
       <input type="button" onclick="redirectToSuccess()"  value="success" class="btn btn-xs btn-success" />
       <input type="button" onclick="redirectToCancel()"  value="cancel" class="btn btn-xs btn-danger" />
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log("Redirecting...");
+            //window.parent.location.href = "";
+        })
+    </script>
   </body>
 </html>
