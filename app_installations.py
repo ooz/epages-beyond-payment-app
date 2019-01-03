@@ -76,7 +76,6 @@ class AppInstallations(object):
         message = '%s:%s' % (code, access_token_url)
         return sign(message, client_secret)
 
-
     def _refresh_token(self, installation):
         """Get a new token using the refresh token
         """
