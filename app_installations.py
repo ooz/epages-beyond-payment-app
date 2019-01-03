@@ -8,6 +8,24 @@ import psycopg2
 
 from signers import sign
 
+class Installation(object):
+    def __init__(self, api_url, access_token, refresh_token=None, expiry_date=None):
+        self.api_url = api_url
+        self.access_token = access_token
+        self.refresh_token = refresh_token
+        self.expiry_date = expiry_date
+        self.hostname = urlparse(api_url).hostname
+
+    def is_expired(self):
+        return datetime.now() > (self.expiry_date - timedelta(minutes=15))
+
+    @staticmethod
+    def _from_token_response(api_url, token_response):
+        return Installation(api_url=api_url,
+            access_token=token_response.get('access_token'),
+            refresh_token=token_response.get('refresh_token', None),
+            expiry_date=(datetime.now() + timedelta(seconds=token_response.get('expires_in'))))
+
 class AppInstallations(object):
 
     def __init__(self, client_id, client_secret):
@@ -142,23 +160,3 @@ class PostgresAppInstallations(AppInstallations):
                                  refresh_token=entry[3],
                                  expiry_date=entry[4])
         return None
-
-
-class Installation(object):
-
-    def __init__(self, api_url, access_token, refresh_token=None, expiry_date=None):
-        self.api_url = api_url
-        self.access_token = access_token
-        self.refresh_token = refresh_token
-        self.expiry_date = expiry_date
-        self.hostname = urlparse(api_url).hostname
-
-    def is_expired(self):
-        return datetime.now() > (self.expiry_date - timedelta(minutes=15))
-
-    @staticmethod
-    def _from_token_response(api_url, token_response):
-        return Installation(api_url=api_url,
-            access_token=token_response.get('access_token'),
-            refresh_token=token_response.get('refresh_token', None),
-            expiry_date=(datetime.now() + timedelta(seconds=token_response.get('expires_in'))))
