@@ -143,7 +143,7 @@ def cancel_payment(payment_id):
     '''
     print('Canceling payment %s' % payment_id)
     return render_template('embedded_payment_approval.html',
-                           payment_id=payment_id
+                           payment_id=payment_id)
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
 def capture_payment(payment_id):
