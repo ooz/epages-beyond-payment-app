@@ -20,9 +20,9 @@
           <input type="submit" formaction="{{ cancel_uri }}" value="cancel" class="btn btn-danger" />
         </div>
       </form>
-      {% elseif state == "APPROVED" %}
+      {% elif state == "APPROVED" %}
       <h1>All good! Thank you! :)</h1>
-      {% elseif state == "CANCELED" %}
+      {% elif state == "CANCELED" %}
       <h1>:(</h1>
       {% endif %}
 
