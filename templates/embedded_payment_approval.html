@@ -13,7 +13,6 @@
       <form method="post">
         <div class="form-group">
           <input type="hidden" name="shop_id" value="{{ shop_id }}" />
-          <input type="hidden" name="payment_id" value="{{ payment_id }}" />
           <input type="hidden" name="signature" value="{{ signature }}" />
 
           <input type="submit" formaction="{{ approve_uri }}" value="submit" class="btn btn-success" />
@@ -23,9 +22,9 @@
       {% elif state == "APPROVED" %}
       <h1>All good! Thank you! :)</h1>
       {% elif state == "CANCELED" %}
-      <h1>:(</h1>
+      <h1>Ok, maybe next time! :(</h1>
       {% elif state == "ERROR" %}
-      <h1>An error occurred! Trying to get you back to the checkout...</h1>
+      <h1>Something went wrong! Please close the dialog and try again :(</h1>
       {% endif %}
 
     </div>

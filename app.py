@@ -126,14 +126,20 @@ def embedded_payment_approval():
     shop_id = unquote(args.get('shopId', ''))
     approve_uri = '/payments/%s/approve' % payment_id
     cancel_uri = '/payments/%s/cancel' % payment_id
+    _validate_signature(signature, shop_id, payment_id)
     return render_template('embedded_payment_approval.html',
                            state='PENDING',
-                           payment_id=payment_id,
                            signature=signature,
                            shop=shop,
                            shop_id=shop_id,
                            approve_uri=approve_uri,
                            cancel_uri=cancel_uri)
+
+def _validate_signature(signature_to_validate, shop_id, payment_id):
+    expected_signature = sign('%s:%s' % (shop_id, payment_id), CLIENT_SECRET)
+    match = signature_to_validate == expected_signature
+    print("Validating signatures: %s | %s | match: %s", (signature_to_validate, expected_signature, str(match)))
+    return match
 
 @app.route('/payments/<payment_id>/approve', methods=['POST'])
 def approve_payment(payment_id):
@@ -142,10 +148,12 @@ def approve_payment(payment_id):
     print('Approving payment %s' % payment_id)
 
     shop_id = request.form.get('shop_id', '')
+    signature = request.form.get('signature', '')
     shop = SHOPS.get_shop(shop_id)
     installation = get_installation(shop.hostname)
-    return_uri = payments.approve_payment(installation, payment_id)
+    _validate_signature(signature, shop_id, payment_id)
 
+    return_uri = payments.approve_payment(installation, payment_id)
     return render_template('embedded_payment_approval.html',
                            state='APPROVED',
                            return_uri=return_uri)
@@ -157,10 +165,12 @@ def cancel_payment(payment_id):
     print('Canceling payment %s' % payment_id)
 
     shop_id = request.form.get('shop_id', '')
+    signature = request.form.get('signature', '')
     shop = SHOPS.get_shop(shop_id)
     installation = get_installation(shop.hostname)
-    return_uri = payments.cancel_payment(installation, payment_id)
+    _validate_signature(signature, shop_id, payment_id)
 
+    return_uri = payments.cancel_payment(installation, payment_id)
     return render_template('embedded_payment_approval.html',
                            state='CANCELED',
                            return_uri=return_uri)
