@@ -14,12 +14,14 @@ from urllib.parse import urlencode, urlparse, unquote
 from flask import Flask, render_template, request, Response, abort, escape, jsonify
 
 from app_installations import AppInstallations, PostgresAppInstallations
+from shops import Shop, PostgresShops, get_shop_id
 from payment_method_definitions import create_payment_method
-from signer import sign
+from signers import sign
 
 app = Flask(__name__)
 
 APP_INSTALLATIONS = None
+SHOPS = None
 CLIENT_SECRET = ''
 DEFAULT_HOSTNAME = ''
 LOGGER = logging.getLogger("app")
@@ -49,15 +51,16 @@ def callback():
     APP_INSTALLATIONS.retrieve_token_from_auth_code(api_url, code, access_token_url, signature)
 
     hostname = urlparse(api_url).hostname
-    created_payment_methods = _auto_create_payment_methods(hostname)
+    installation = get_installation(hostname)
+
+    created_payment_methods = _auto_create_payment_methods(installation)
+    _get_and_store_shop_id(installation)
 
     return render_template('callback_result.html',
                             return_url=return_url,
                             created_payment_methods=created_payment_methods)
 
-def _auto_create_payment_methods(hostname):
-    installation = APP_INSTALLATIONS.get_installation(hostname)
-
+def _auto_create_payment_methods(installation):
     created_payment_methods = []
     for pmd_name in AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS:
         status = create_payment_method(installation, pmd_name)
@@ -65,9 +68,14 @@ def _auto_create_payment_methods(hostname):
             "status_code": status,
             "payment_method_definition_name": pmd_name
         })
-        print("Created payment method for %s in shop %s with status %i" % (pmd_name, hostname, status))
+        print("Created payment method for %s in shop %s with status %i" % (pmd_name, installation.hostname, status))
 
     return created_payment_methods
+
+def _get_and_store_shop_id(installation):
+    shop_id = get_shop_id(installation)
+    shop = Shop(shop_id, installation.hostname)
+    SHOPS.create_or_update_shop(shop)
 
 @app.route('/merchants/<shop_id>')
 def merchant_account_status(shop_id):
@@ -121,6 +129,12 @@ def embedded_payment_approval():
 
 @app.route('/payments/<payment_id>/approve', methods=['POST'])
 def approve_payment(payment_id):
+    ''' Currently only needed for embedded payments
+    '''
+    pass
+
+@app.route('/payments/<payment_id>/cancel', methods=['POST'])
+def cancel_payment(payment_id):
     ''' Currently only needed for embedded payments
     '''
     pass
@@ -183,21 +197,20 @@ def all_exception_handler(error):
 
 def init():
     global APP_INSTALLATIONS
+    global SHOPS
     global DEFAULT_HOSTNAME
     global CLIENT_SECRET
 
     CLIENT_ID = os.environ.get('CLIENT_ID', '')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
-    API_URL = os.environ.get('API_URL', '')
-    if API_URL != '': # private app mode - we are operating in a single shop and can store the token in memory
-        print("Initialize in-memory AppInstallations")
-        APP_INSTALLATIONS = AppInstallations(CLIENT_ID, CLIENT_SECRET)
-        DEFAULT_HOSTNAME = urlparse(API_URL).hostname
-        APP_INSTALLATIONS.retrieve_token_from_client_credentials(API_URL)
-    else: # official app mode - we can handle multiple installations for multiple shops and store data about app installation in postgres
-        print("Initialize PostgresAppInstallations")
-        APP_INSTALLATIONS = PostgresAppInstallations(os.environ.get('DATABASE_URL'), CLIENT_ID, CLIENT_SECRET)
-        APP_INSTALLATIONS.create_schema()
+
+    print("Initialize PostgresAppInstallations")
+    APP_INSTALLATIONS = PostgresAppInstallations(os.environ.get('DATABASE_URL'), CLIENT_ID, CLIENT_SECRET)
+    APP_INSTALLATIONS.create_schema()
+
+    print("Initialize PostgresShops")
+    SHOPS = PostgresShops(os.environ.get('DATABASE_URL'))
+    SHOPS.create_schema()
 
 init()
 if __name__ == '__main__':
