@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""
+'''
 Author: Oliver Zscheyge
 Description:
     Web app that generates beautiful order documents for ePages Beyond shops.
-"""
+'''
 
 import os
 import logging
@@ -25,9 +25,9 @@ APP_INSTALLATIONS = None
 SHOPS = None
 CLIENT_SECRET = ''
 DEFAULT_HOSTNAME = ''
-LOGGER = logging.getLogger("app")
+LOGGER = logging.getLogger('app')
 
-AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS = ["beautiful-test-payment-embedded"]
+AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS = ['beautiful-test-payment-embedded']
 
 @app.route('/')
 def root():
@@ -43,11 +43,11 @@ def root_hostname(hostname):
 @app.route('/callback')
 def callback():
     args = request.args
-    return_url = args.get("return_url")
-    access_token_url = args.get("access_token_url")
-    api_url = args.get("api_url")
-    code = args.get("code")
-    signature = unquote(args.get("signature"))
+    return_url = args.get('return_url')
+    access_token_url = args.get('access_token_url')
+    api_url = args.get('api_url')
+    code = args.get('code')
+    signature = unquote(args.get('signature'))
 
     APP_INSTALLATIONS.retrieve_token_from_auth_code(api_url, code, access_token_url, signature)
 
@@ -66,10 +66,10 @@ def _auto_create_payment_methods(installation):
     for pmd_name in AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS:
         status = create_payment_method(installation, pmd_name)
         created_payment_methods.append({
-            "status_code": status,
-            "payment_method_definition_name": pmd_name
+            'status_code': status,
+            'payment_method_definition_name': pmd_name
         })
-        print("Created payment method for %s in shop %s with status %i" % (pmd_name, installation.hostname, status))
+        print('Created payment method for %s in shop %s with status %i' % (pmd_name, installation.hostname, status))
 
     return created_payment_methods
 
@@ -80,19 +80,19 @@ def _get_and_store_shop_id(installation):
 
 @app.route('/merchants/<shop_id>')
 def merchant_account_status(shop_id):
-    print("Serving always ready merchant account status")
+    print('Serving always ready merchant account status')
     return jsonify({
-        "ready" : True,
-        "details" : {
-            "primaryEmail" : "example@b.c"
+        'ready' : True,
+        'details' : {
+            'primaryEmail' : 'example@b.c'
         }
     })
 
 @app.route('/payments', methods=['POST'])
 def create_payment():
-    print("Creating payment with paymentNote")
+    print('Creating payment with paymentNote')
     return jsonify({
-        "paymentNote": "Please transfer the money using the reference %s to the account %s" % (generate_id(), generate_id()),
+        'paymentNote': 'Please transfer the money using the reference %s to the account %s' % (generate_id(), generate_id()),
     })
 
 @app.route('/embedded-payments', methods=['POST'])
@@ -126,19 +126,22 @@ def embedded_payment_approval():
     shop_id = unquote(args.get('shopId', ''))
     approve_uri = '/payments/%s/approve' % payment_id
     cancel_uri = '/payments/%s/cancel' % payment_id
-    _validate_signature(signature, shop_id, payment_id)
+
+    if _validate_signature(signature, shop_id, payment_id):
+        return render_template('embedded_payment_approval.html',
+                            state='PENDING',
+                            signature=signature,
+                            shop=shop,
+                            shop_id=shop_id,
+                            approve_uri=approve_uri,
+                            cancel_uri=cancel_uri)
     return render_template('embedded_payment_approval.html',
-                           state='PENDING',
-                           signature=signature,
-                           shop=shop,
-                           shop_id=shop_id,
-                           approve_uri=approve_uri,
-                           cancel_uri=cancel_uri)
+                            state='ERROR')
 
 def _validate_signature(signature_to_validate, shop_id, payment_id):
     expected_signature = sign('%s:%s' % (shop_id, payment_id), CLIENT_SECRET)
     match = signature_to_validate == expected_signature
-    print("Validating signatures: %s | %s | match: %s", (signature_to_validate, expected_signature, str(match)))
+    print('Validated signatures: %s | %s | match: %s' % (signature_to_validate, expected_signature, str(match)))
     return match
 
 @app.route('/payments/<payment_id>/approve', methods=['POST'])
@@ -151,12 +154,14 @@ def approve_payment(payment_id):
     signature = request.form.get('signature', '')
     shop = SHOPS.get_shop(shop_id)
     installation = get_installation(shop.hostname)
-    _validate_signature(signature, shop_id, payment_id)
 
-    return_uri = payments.approve_payment(installation, payment_id)
+    if _validate_signature(signature, shop_id, payment_id):
+        return_uri = payments.approve_payment(installation, payment_id)
+        return render_template('embedded_payment_approval.html',
+                            state='APPROVED',
+                            return_uri=return_uri)
     return render_template('embedded_payment_approval.html',
-                           state='APPROVED',
-                           return_uri=return_uri)
+                            state='ERROR')
 
 @app.route('/payments/<payment_id>/cancel', methods=['POST'])
 def cancel_payment(payment_id):
@@ -168,18 +173,20 @@ def cancel_payment(payment_id):
     signature = request.form.get('signature', '')
     shop = SHOPS.get_shop(shop_id)
     installation = get_installation(shop.hostname)
-    _validate_signature(signature, shop_id, payment_id)
 
-    return_uri = payments.cancel_payment(installation, payment_id)
+    if _validate_signature(signature, shop_id, payment_id):
+        return_uri = payments.cancel_payment(installation, payment_id)
+        return render_template('embedded_payment_approval.html',
+                            state='CANCELED',
+                            return_uri=return_uri)
     return render_template('embedded_payment_approval.html',
-                           state='CANCELED',
-                           return_uri=return_uri)
+                           state='ERROR')
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
 def capture_payment(payment_id):
-    print("Capturing payment %s" % payment_id)
+    print('Capturing payment %s' % payment_id)
     return jsonify({
-        "paymentStatus" : "CAPTURED",
+        'paymentStatus' : 'CAPTURED',
     })
 
 def generate_id():
@@ -187,14 +194,14 @@ def generate_id():
 
 @app.before_request
 def limit_open_proxy_requests():
-    """Security measure to prevent:
+    '''Security measure to prevent:
     http://serverfault.com/questions/530867/baidu-in-nginx-access-log
     http://security.stackexchange.com/questions/41078/url-from-another-domain-in-my-access-log
     http://serverfault.com/questions/115827/why-does-apache-log-requests-to-get-http-www-google-com-with-code-200
     http://stackoverflow.com/questions/22251038/how-to-limit-flask-dev-server-to-only-one-visiting-ip-address
-    """
+    '''
     if not is_allowed_request():
-        print("Someone is messing with us:")
+        print('Someone is messing with us:')
         print(request.url_root)
         print(request)
         abort(403)
@@ -224,7 +231,7 @@ class ShopNotKnown(Exception):
 
 @app.errorhandler(ShopNotKnown)
 def shop_not_known(e):
-    return render_template('index.html', installed=False, error_message="App not installed for the requested shop with hostname %s" % e.hostname)
+    return render_template('index.html', installed=False, error_message='App not installed for the requested shop with hostname %s' % e.hostname)
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
@@ -240,11 +247,11 @@ def init():
     CLIENT_ID = os.environ.get('CLIENT_ID', '')
     CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 
-    print("Initialize PostgresAppInstallations")
+    print('Initialize PostgresAppInstallations')
     APP_INSTALLATIONS = PostgresAppInstallations(os.environ.get('DATABASE_URL'), CLIENT_ID, CLIENT_SECRET)
     APP_INSTALLATIONS.create_schema()
 
-    print("Initialize PostgresShops")
+    print('Initialize PostgresShops')
     SHOPS = PostgresShops(os.environ.get('DATABASE_URL'))
     SHOPS.create_schema()
 
