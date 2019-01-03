@@ -134,12 +134,16 @@ def approve_payment(payment_id):
     ''' Currently only needed for embedded payments
     '''
     print('Approving payment %s' % payment_id)
+    return render_template('embedded_payment_approval.html',
+                           payment_id=payment_id)
 
 @app.route('/payments/<payment_id>/cancel', methods=['POST'])
 def cancel_payment(payment_id):
     ''' Currently only needed for embedded payments
     '''
     print('Canceling payment %s' % payment_id)
+    return render_template('embedded_payment_approval.html',
+                           payment_id=payment_id
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
 def capture_payment(payment_id):

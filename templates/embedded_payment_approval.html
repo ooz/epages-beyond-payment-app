@@ -10,19 +10,24 @@
       <h1>Payment to {{ shop }}</h1>
 
       <form method="post">
+        <div class="form-group">
           <input type="hidden" name="shop_id" value="{{ shop_id }}" />
           <input type="hidden" name="payment_id" value="{{ payment_id }}" />
           <input type="hidden" name="signature" value="{{ signature }}" />
 
           <button type="submit" formaction="{{ approve_uri }}" value="submit" class="btn btn-xs btn-success" />
           <button type="submit" formaction="{{ cancel_uri }}" value="cancel" class="btn btn-xs btn-danger" />
+        </div>
       </form>
 
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             console.log("Redirecting...");
-            //window.parent.location.href = "";
+            var returnUri = "{{ return_uri }}";
+            if (returnUri) {
+              window.parent.location.href = returnUri;
+            }
         })
     </script>
   </body>
