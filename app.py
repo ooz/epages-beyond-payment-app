@@ -16,6 +16,7 @@ from flask import Flask, render_template, request, Response, abort, escape, json
 from app_installations import AppInstallations, PostgresAppInstallations
 from shops import Shop, PostgresShops, get_shop_id
 from payment_method_definitions import create_payment_method
+import payments
 from signers import sign
 
 app = Flask(__name__)
@@ -100,13 +101,15 @@ def create_embedded_payment():
 
     payload = request.get_json(force=True)
     shop = payload.get('shop', {}).get('name', '')
+    shop_id = payload.get('shopId', '')
     payment_id = payload.get('paymentId', '')
-    signature = sign(payment_id, CLIENT_SECRET)
+    signature = sign('%s:%s' % (shop_id, payment_id), CLIENT_SECRET)
 
     params = {
         'paymentId': payment_id,
         'signature': signature,
-        'shop': shop
+        'shop': shop,
+        'shopId': shop_id
     }
     embeddedApprovalUri = 'https://%s/embedded-payment-approval?%s' % (app_hostname, urlencode(params))
     print('Created embedded payment for shop %s' % shop)
@@ -120,6 +123,7 @@ def embedded_payment_approval():
     payment_id = unquote(args.get('paymentId', ''))
     signature = unquote(args.get('signature', ''))
     shop = unquote(args.get('shop', ''))
+    shop_id = unquote(args.get('shopId', ''))
     approve_uri = '/payments/%s/approve' % payment_id
     cancel_uri = '/payments/%s/cancel' % payment_id
     return render_template('embedded_payment_approval.html',
@@ -127,6 +131,7 @@ def embedded_payment_approval():
                            payment_id=payment_id,
                            signature=signature,
                            shop=shop,
+                           shop_id=shop_id,
                            approve_uri=approve_uri,
                            cancel_uri=cancel_uri)
 
@@ -135,18 +140,30 @@ def approve_payment(payment_id):
     ''' Currently only needed for embedded payments
     '''
     print('Approving payment %s' % payment_id)
+
+    shop_id = request.form.get('shop_id', '')
+    shop = SHOPS.get_shop(shop_id)
+    installation = get_installation(shop.hostname)
+    return_uri = payments.approve_payment(installation, payment_id)
+
     return render_template('embedded_payment_approval.html',
                            state='APPROVED',
-                           payment_id=payment_id)
+                           return_uri=return_uri)
 
 @app.route('/payments/<payment_id>/cancel', methods=['POST'])
 def cancel_payment(payment_id):
     ''' Currently only needed for embedded payments
     '''
     print('Canceling payment %s' % payment_id)
+
+    shop_id = request.form.get('shop_id', '')
+    shop = SHOPS.get_shop(shop_id)
+    installation = get_installation(shop.hostname)
+    return_uri = payments.cancel_payment(installation, payment_id)
+
     return render_template('embedded_payment_approval.html',
                            state='CANCELED',
-                           payment_id=payment_id)
+                           return_uri=return_uri)
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
 def capture_payment(payment_id):

@@ -24,6 +24,8 @@
       <h1>All good! Thank you! :)</h1>
       {% elif state == "CANCELED" %}
       <h1>:(</h1>
+      {% elif state == "ERROR" %}
+      <h1>An error occurred! Trying to get you back to the checkout...</h1>
       {% endif %}
 
     </div>
