@@ -29,7 +29,7 @@ class PostgresShops(Shops):
     def create_or_update_shop(self, shop):
         print("Create/update shop %s (%s)" % (shop.hostname, shop.id))
         sql = ''
-        if self.get_shop(shop.shop_id):
+        if self.get_shop(shop.id):
             sql = "UPDATE SHOPS SET HOSTNAME = %s WHERE ID=%s"
         else:
             sql = "INSERT INTO SHOPS (HOSTNAME, ID) VALUES(%s, %s)"
