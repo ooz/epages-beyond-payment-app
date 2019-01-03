@@ -7,6 +7,7 @@
   </head>
   <body>
     <div class="container pagecontainer">
+      {% if state == "PENDING" %}
       <h1>Payment to {{ shop }}</h1>
 
       <form method="post">
@@ -19,6 +20,11 @@
           <button type="submit" formaction="{{ cancel_uri }}" value="cancel" class="btn btn-danger" />
         </div>
       </form>
+      {% elseif state == "APPROVED" %}
+      <h1>All good! Thank you! :)</h1>
+      {% elseif state == "CANCELED" %}
+      <h1>:(</h1>
+      {% endif %}
 
     </div>
     <script>

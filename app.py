@@ -123,6 +123,7 @@ def embedded_payment_approval():
     approve_uri = '/payments/%s/approve' % payment_id
     cancel_uri = '/payments/%s/cancel' % payment_id
     return render_template('embedded_payment_approval.html',
+                           state='PENDING',
                            payment_id=payment_id,
                            signature=signature,
                            shop=shop,
@@ -135,6 +136,7 @@ def approve_payment(payment_id):
     '''
     print('Approving payment %s' % payment_id)
     return render_template('embedded_payment_approval.html',
+                           state='APPROVED',
                            payment_id=payment_id)
 
 @app.route('/payments/<payment_id>/cancel', methods=['POST'])
@@ -143,6 +145,7 @@ def cancel_payment(payment_id):
     '''
     print('Canceling payment %s' % payment_id)
     return render_template('embedded_payment_approval.html',
+                           state='CANCELED',
                            payment_id=payment_id)
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
