@@ -97,8 +97,6 @@ def create_payment():
 @app.route('/embedded-payments', methods=['POST'])
 def create_embedded_payment():
     app_hostname = urlparse(request.url_root).hostname
-    epages_signatures = request.headers.get('X-EPAGES-SIGNATURE')
-    print('Create embedded payment with signature headers: %s', str(epages_signatures))
 
     payload = request.get_json(force=True)
     shop = payload.get('shop', {}).get('name', '')
@@ -122,22 +120,26 @@ def embedded_payment_approval():
     payment_id = unquote(args.get('paymentId', ''))
     signature = unquote(args.get('signature', ''))
     shop = unquote(args.get('shop', ''))
+    approve_uri = '/payments/%s/approve' % payment_id
+    cancel_uri = '/payments/%s/cancel' % payment_id
     return render_template('embedded_payment_approval.html',
                            payment_id=payment_id,
                            signature=signature,
-                           shop=shop)
+                           shop=shop,
+                           approve_uri=approve_uri,
+                           cancel_uri=cancel_uri)
 
 @app.route('/payments/<payment_id>/approve', methods=['POST'])
 def approve_payment(payment_id):
     ''' Currently only needed for embedded payments
     '''
-    pass
+    print('Approving payment %s' % payment_id)
 
 @app.route('/payments/<payment_id>/cancel', methods=['POST'])
 def cancel_payment(payment_id):
     ''' Currently only needed for embedded payments
     '''
-    pass
+    print('Canceling payment %s' % payment_id)
 
 @app.route('/payments/<payment_id>/capture', methods=['POST'])
 def capture_payment(payment_id):

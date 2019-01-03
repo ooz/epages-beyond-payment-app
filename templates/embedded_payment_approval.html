@@ -9,8 +9,15 @@
     <div class="container pagecontainer">
       <h1>Payment to {{ shop }}</h1>
 
-      <input type="button" onclick="redirectToSuccess()"  value="success" class="btn btn-xs btn-success" />
-      <input type="button" onclick="redirectToCancel()"  value="cancel" class="btn btn-xs btn-danger" />
+      <form method="post">
+          <input type="hidden" name="shop_id" value="{{ shop_id }}" />
+          <input type="hidden" name="payment_id" value="{{ payment_id }}" />
+          <input type="hidden" name="signature" value="{{ signature }}" />
+
+          <button type="submit" formaction="{{ approve_uri }}" value="submit" class="btn btn-xs btn-success" />
+          <button type="submit" formaction="{{ cancel_uri }}" value="cancel" class="btn btn-xs btn-danger" />
+      </form>
+
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
