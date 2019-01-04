@@ -16,11 +16,6 @@
         }
     ],
     "env": {
-        "API_URL": {
-            "value": "",
-            "description": "API URL to your ePages Beyond shop. If set, this becomes a custom app (developer app).",
-            "required": false
-        },
         "CLIENT_ID": {
             "value": "",
             "description": "Client ID of your app"
