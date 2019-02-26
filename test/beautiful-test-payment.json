@@ -13,6 +13,7 @@
   "refundPaymentUriTemplate": null,
   "officialName": {},
   "capturePaymentUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/payments/{paymentId}/capture",
+  "captureWorkflow": "CAPTURE_ON_ORDER",
   "disconnectUriTemplate": null,
   "logos": [],
   "referralUriTemplate": null,
