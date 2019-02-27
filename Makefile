@@ -1,6 +1,6 @@
 # Testing
 test:
-	pipenv run pytest -v -c env.list
+	pipenv run pytest -vv -c env.list
 
 # Cleanup
 clean:
