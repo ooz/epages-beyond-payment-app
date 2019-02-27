@@ -1,0 +1,40 @@
+{
+    "createPaymentUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/embedded-payments",
+    "_links": {
+        "self": {
+            "href": "https://system.beyondshop.cloud/api/payment-method-definitions/beautiful-test-payment-embedded-selection"
+        }
+    },
+    "workflow": "EMBEDDED_ON_SELECTION",
+    "_id": "beautiful-test-payment-embedded-selection",
+    "sandbox": true,
+    "statusUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/merchants/{shopId}",
+    "refundPaymentUriTemplate": null,
+    "officialName": {
+        "de-DE": "Hübsche Eingebettete Test Zahlmethode bei Auswahl",
+        "en-US": "Beautiful Embedded Test Payment on Selection",
+        "en-GB": "Beautiful Embedded Test Payment on Selection"
+    },
+    "capturePaymentUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/payments/{paymentId}/capture",
+    "captureWorkflow": "CAPTURE_ON_ORDER",
+    "disconnectUriTemplate": null,
+    "logos": [],
+    "referralUriTemplate": null,
+    "refund": "NO_REFUND",
+    "defaultName": {
+        "de-DE": "Hübsche Eingebettete Test Zahlmethode bei Auswahl",
+        "en-US": "Beautiful Embedded Test Payment on Selection",
+        "en-GB": "Beautiful Embedded Test Payment on Selection"
+    },
+    "defaultDescription": {
+        "de-DE": "Tolle eingebettete Zahlmethode. Im nächsten Schritt erscheint ein Dialog zum Eingeben Ihrer Zahldaten!",
+        "en-US": "Great embedded payment. Please enter your data in the dialogue!",
+        "en-GB": "Great embedded payment. Please enter your data in the dialogue!"
+    },
+    "officialDescription": {
+        "de-DE": "Zum Testen des iframe nach Auswahl der Methode",
+        "en-US": "To test the embedded iframe after selection",
+        "en-GB": "To test the embedded iframe after selection"
+    },
+    "name": "beautiful-test-payment-embedded-selection"
+}

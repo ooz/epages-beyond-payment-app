@@ -44,11 +44,14 @@ def _compare_to_expected_payment_method_definitions(payment_method_definitions):
     beautiful_test_payment = [pmd for pmd in payment_method_definitions if pmd.get('_id', '') == 'beautiful-test-payment'][0]
     beautiful_test_payment_sandbox = [pmd for pmd in payment_method_definitions if pmd.get('_id', '') == 'beautiful-test-payment-sandbox'][0]
     beautiful_test_payment_embedded = [pmd for pmd in payment_method_definitions if pmd.get('_id', '') == 'beautiful-test-payment-embedded'][0]
+    beautiful_test_payment_embedded_on_selection = [pmd for pmd in payment_method_definitions if pmd.get('_id', '') == 'beautiful-test-payment-embedded-selection'][0]
 
     expected_pmd = read_json_file('test/beautiful-test-payment.json')
     expected_pmd_sandbox = read_json_file('test/beautiful-test-payment-sandbox.json')
     expected_pmd_embedded = read_json_file('test/beautiful-test-payment-embedded.json')
+    expected_pmd_embedded_on_selection = read_json_file('test/beautiful-test-payment-embedded-on-selection.json')
 
     assert expected_pmd == beautiful_test_payment
     assert expected_pmd_sandbox == beautiful_test_payment_sandbox
     assert expected_pmd_embedded == beautiful_test_payment_embedded
+    assert expected_pmd_embedded_on_selection == beautiful_test_payment_embedded_on_selection
