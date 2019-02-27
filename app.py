@@ -27,7 +27,10 @@ CLIENT_SECRET = ''
 DEFAULT_HOSTNAME = ''
 LOGGER = logging.getLogger('app')
 
-AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS = ['beautiful-test-payment-embedded']
+AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS = [
+    'beautiful-test-payment-embedded',
+    'beautiful-test-payment-embedded-selection'
+]
 
 @app.route('/')
 def root():
