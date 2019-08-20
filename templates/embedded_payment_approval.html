@@ -8,15 +8,15 @@
   <body>
     <div class="container pagecontainer">
       {% if state == "PENDING" %}
-      <h1>Payment to {{ shop }}</h1>
+      <img src="{{ url_for('static', filename='iframe_mock_input.png') }}" alt="mock input" />
 
       <form method="post">
         <div class="form-group">
           <input type="hidden" name="shop_id" value="{{ shop_id }}" />
           <input type="hidden" name="signature" value="{{ signature }}" />
 
-          <input type="submit" formaction="{{ approve_uri }}" value="submit" class="btn btn-success" />
-          <input type="submit" formaction="{{ cancel_uri }}" value="cancel" class="btn btn-danger" />
+          <input type="submit" formaction="{{ approve_uri }}" value="Confirm" class="btn btn-primary" />
+          <input type="submit" formaction="{{ cancel_uri }}" value="Cancel" class="btn btn-secondary" />
         </div>
       </form>
       {% elif state == "APPROVED" %}
