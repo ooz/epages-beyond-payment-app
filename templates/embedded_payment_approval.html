@@ -20,11 +20,11 @@
         </div>
       </form>
       {% elif state == "APPROVED" %}
-      <p>Payment approved.</p>
+      <h2>Payment approved.</h2>
       {% elif state == "CANCELED" %}
-      <p>Payment canceled.</p>
+      <h2>Payment canceled.</h2>
       {% elif state == "ERROR" %}
-      <p>Payment failed. Please close the dialog and try again later!</p>
+      <h2>Payment failed. Please close the dialog and try again later!</h2>
       {% endif %}
 
     </div>
