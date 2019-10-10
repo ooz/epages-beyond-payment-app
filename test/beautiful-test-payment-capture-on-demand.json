@@ -1,0 +1,40 @@
+{
+  "createPaymentUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/payments",
+  "_links": {
+    "self": {
+      "href": "https://system.beyondshop.cloud/api/payment-method-definitions/beautiful-test-payment-capture-on-demand"
+    }
+  },
+  "workflow": "PAYMENT_ON_BUY",
+  "_id": "beautiful-test-payment-capture-on-demand",
+  "sandbox": true,
+  "statusUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/merchants/{shopId}",
+  "refundPaymentUriTemplate": null,
+  "capturePaymentUriTemplate": "https://epages-beyond-payment-app.herokuapp.com/payments/{paymentId}/capture",
+  "captureWorkflow": "CAPTURE_ON_DEMAND",
+  "disconnectUriTemplate": null,
+  "logos": [],
+  "referralUriTemplate": null,
+  "refund": "NO_REFUND",
+  "defaultName": {
+    "de-DE": "Hübsche Zahlmethode mit CAPUTRE_ON_DEMAND",
+    "en-US": "Beautiful Test Payment with CAPUTRE_ON_DEMAND",
+    "en-GB": "Beautiful Test Payment with CAPUTRE_ON_DEMAND"
+  },
+  "defaultDescription": {
+      "de-DE": "Hübsche Zahlmethode mit CAPUTRE_ON_DEMAND",
+      "en-US": "Beautiful Test Payment with CAPUTRE_ON_DEMAND",
+      "en-GB": "Beautiful Test Payment with CAPUTRE_ON_DEMAND"
+  },
+  "officialName": {
+    "de-DE": "Hübsche Zahlmethode mit CAPUTRE_ON_DEMAND",
+    "en-US": "Beautiful Test Payment with CAPUTRE_ON_DEMAND",
+    "en-GB": "Beautiful Test Payment with CAPUTRE_ON_DEMAND"
+  },
+  "officialDescription": {
+      "de-DE": "Zum Testen des CAPTURE_ON_DEMAND flows",
+      "en-US": "To test the CAPTURE_ON_DEMAND flow",
+      "en-GB": "To test the CAPTURE_ON_DEMAND flow"
+  },
+  "name": "beautiful-test-payment-capture-on-demand"
+}

@@ -29,7 +29,8 @@ LOGGER = logging.getLogger('app')
 
 AUTO_INSTALLED_PAYMENT_METHOD_DEFINITIONS = [
     'beautiful-test-payment-embedded',
-    'beautiful-test-payment-embedded-selection'
+    'beautiful-test-payment-embedded-selection',
+    'beautiful-test-payment-capture-on-demand'
 ]
 
 @app.route('/')
