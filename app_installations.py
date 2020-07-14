@@ -21,6 +21,7 @@ class Installation(object):
 
     @staticmethod
     def _from_token_response(api_url, token_response):
+        print('Token response: ' + repr(token_response))
         return Installation(api_url=api_url,
             access_token=token_response.get('access_token'),
             refresh_token=token_response.get('refresh_token', None),
